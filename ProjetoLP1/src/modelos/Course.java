@@ -1,6 +1,7 @@
 package modelos;
 
-class Course {
+public class Course {
+
     private String code;
     private String title;
     private Integer numCredits;
@@ -17,28 +18,29 @@ class Course {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public Integer getNumCredits() {
         return numCredits;
     }
 
-    public void setNumCredits(Integer numCredits) {
-        this.numCredits = numCredits;
-    }
-
     public Integer getMaxStudents() {
         return maxStudents;
+    }
+
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setNumCredits(Integer numCredits) {
+        this.numCredits = numCredits;
     }
 
     public void setMaxStudents(Integer maxStudents) {
@@ -47,7 +49,7 @@ class Course {
 
     @Override
     public String toString() {
-        return this.code + " " + this.title + " " + this.numCredits + " " + this.maxStudents;
+        return "Course (" + this.code + ", " + this.title + ", " + this.numCredits + ", " + this.maxStudents + ")";
     }
 
     @Override

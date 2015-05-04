@@ -1,10 +1,11 @@
 package modelos;
 
 public class PostGraduateStudent extends Student {
+
     private String thesisTitle;
     private String supervisor;
 
-    public PostGraduateStudent(String thesisTitle, String supervisor, Integer id, String name, String address, String phone, String email) {
+    public PostGraduateStudent(long id, String name, String address, String phone, String email, String thesisTitle, String supervisor) {
         super(id, name, address, phone, email);
         this.thesisTitle = thesisTitle;
         this.supervisor = supervisor;
@@ -14,12 +15,13 @@ public class PostGraduateStudent extends Student {
         return thesisTitle;
     }
 
-    public void setThesisTitle(String thesisTitle) {
-        this.thesisTitle = thesisTitle;
-    }
-
     public String getSupervisor() {
         return supervisor;
+    }
+
+
+    public void setThesisTitle(String thesisTitle) {
+        this.thesisTitle = thesisTitle;
     }
 
     public void setSupervisor(String supervisor) {
@@ -33,6 +35,6 @@ public class PostGraduateStudent extends Student {
 
     @Override
     public String toString() {
-        return super.toString() + " " + thesisTitle + " " + supervisor;
+        return super.toString() + " PostGraduate (" + thesisTitle + ", " + supervisor + ")";
     }
 }

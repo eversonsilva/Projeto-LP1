@@ -11,26 +11,14 @@ public class University {
 
     public University(String name) {
         this.name = name;
-
-        this.courses = new ArrayList<>();
-        this.students = new ArrayList<>();
-        this.registrations = new ArrayList<>();
+        this.courses = new ArrayList<Course>();
+        this.students = new ArrayList<Student>();
+        this.registrations = new ArrayList<Registration>();
     }
 
-    public Course addCourse(String code, String title, Integer numCredits, Integer maxStudents) {
-        Course tmpCourse = new Course(code, title, numCredits, maxStudents);
-
-        this.courses.add(tmpCourse);
-
-        return tmpCourse;
-    }
-
-    public Course updateCourse(String code, String title, Integer numCredits, Integer maxStudents) {
-        Course tmpCourse = new Course(code, title, numCredits, maxStudents);
-
-        return tmpCourse;
-    }
-
+    /*
+    Name
+    */
     public String getName() {
         return name;
     }
@@ -39,27 +27,197 @@ public class University {
         this.name = name;
     }
 
+    /*
+    Courses
+    */
+    public Course addCourse(String code, String title, Integer numCredits, Integer maxStudents) {
+        Course course = getCourse(code);
+        if(course == null) {
+            course = new Course(code, title, numCredits, maxStudents);
+            this.courses.add(course);
+        }
+        return course;
+    }
+
+    public Course updateCourse(String code, String title, Integer numCredits, Integer maxStudents) {
+        Course course = getCourse(code);
+        if(course != null) {
+            course.setTitle(title);
+            course.setNumCredits(numCredits);
+            course.setMaxStudents(maxStudents);
+        }
+        return course;
+    }
+
+    public Course getCourse(String code) {
+        for (Course course : courses)
+            if(course.getCode().equals(code))
+                return course;
+        return null;
+    }
+
     public ArrayList<Course> getCourses() {
         return courses;
+    }
+
+    public ArrayList<Course> getCourses(long studentID) {
+        ArrayList<Course> list = new ArrayList<Course>();
+        for (Registration reg : this.registrations) {
+            if(reg.getStudent().getId() == studentID)
+                list.add(reg.getCourse());
+        }
+        return list;
     }
 
     public void setCourses(ArrayList<Course> courses) {
         this.courses = courses;
     }
 
+    /*
+    Students
+    */
+    public UnderGraduateStudent addUnderGraduateStudent(long id, String name, String address, String phone, String email, String major, String minor) {
+        Student s = getStudent(id);
+        UnderGraduateStudent student = (s instanceof UnderGraduateStudent)? (UnderGraduateStudent) s : null;
+        if(s == null) {
+            student = new UnderGraduateStudent(id, name, address, phone, email, major, minor);
+            this.students.add(student);
+        }
+        return student;
+    }
+
+    public UnderGraduateStudent updateUnderGraduateStudent(long id, String name, String address, String phone, String email, String major, String minor) {
+        Student s = getStudent(id);
+        UnderGraduateStudent student = (s instanceof UnderGraduateStudent)? (UnderGraduateStudent) s : null;
+        if(student != null) {
+            student.setName(name);
+            student.setAddress(address);
+            student.setPhone(phone);
+            student.setEmail(email);
+            student.setMajor(major);
+            student.setMinor(minor);
+        }
+        return student;
+    }
+
+    public PostGraduateStudent addPostGraduateStudent(long id, String name, String address, String phone, String email, String thesisTitle, String supervisor) {
+        Student s = getStudent(id);
+        PostGraduateStudent student = (s instanceof PostGraduateStudent)? (PostGraduateStudent) s : null;
+        if(s == null) {
+            student = new PostGraduateStudent(id, name, address, phone, email, thesisTitle, supervisor);
+            this.students.add(student);
+        }
+        return student;
+    }
+
+    public PostGraduateStudent updatePostGraduateStudent(long id, String name, String address, String phone, String email, String thesisTitle, String supervisor) {
+        Student s = getStudent(id);
+        PostGraduateStudent student = (s instanceof PostGraduateStudent)? (PostGraduateStudent) s : null;
+        if(student != null) {
+            student.setName(name);
+            student.setAddress(address);
+            student.setPhone(phone);
+            student.setEmail(email);
+            student.setThesisTitle(thesisTitle);
+            student.setSupervisor(supervisor);
+        }
+        return student;
+    }
+
+    public Student getStudent(long id) {
+        for (Student student : students) {
+            if (student.getId() == id) 
+                return student;
+        }
+        return null;
+    }
+
     public ArrayList<Student> getStudents() {
         return students;
+    }
+
+    public ArrayList<Student> getStudents(String courseCode) {
+        ArrayList<Student> list = new ArrayList<Student>();
+        for (Registration reg : this.registrations) {
+            if (reg.getCourse().getCode().equals(courseCode))
+                list.add(reg.getStudent());
+        }
+        return list;
+    }
+
+    public ArrayList<UnderGraduateStudent> getUnderGraduateStudents() {
+        ArrayList<UnderGraduateStudent> list = new ArrayList<UnderGraduateStudent>();
+        for(Student student : this.students) {
+            if(student instanceof UnderGraduateStudent)
+                list.add((UnderGraduateStudent) student);
+        }
+        return list;
+    }
+
+    public ArrayList<PostGraduateStudent> getPostGraduateStudent() {
+        ArrayList<PostGraduateStudent> list = new ArrayList<PostGraduateStudent>();
+        for(Student student : this.students) {
+            if(student instanceof PostGraduateStudent)
+                list.add((PostGraduateStudent) student);
+        }
+        return list;
     }
 
     public void setStudents(ArrayList<Student> students) {
         this.students = students;
     }
 
+    /*
+    Registrations
+    */
     public ArrayList<Registration> getRegistrations() {
         return registrations;
     }
 
     public void setRegistrations(ArrayList<Registration> registrations) {
         this.registrations = registrations;
+    }
+
+    public Registration getRegistration(long studentID, String courseCode) {
+        for (Registration reg : this.registrations) {
+            if(reg.getCourse().getCode().equals(courseCode) && reg.getStudent().getId() == studentID)
+                return reg;
+        }
+        return null;
+    }
+
+    public boolean registerStudent(long studentID, String courseCode) {
+        Registration reg = getRegistration(studentID, courseCode);
+        if(reg == null) {
+            Student student = getStudent(studentID);
+            Course course = getCourse(courseCode);
+
+            if(student != null && course != null) {
+                reg = new Registration(student, course, 0, 0);
+                this.registrations.add(reg);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean deRegisterStudent(long studentID, String courseCode) {
+        //inefficient
+        Registration reg = getRegistration(studentID, courseCode);
+        if(reg != null) {
+            this.registrations.remove(reg);
+        }
+        return false;
+    }
+
+    /*
+    Misc
+    */
+    @Override
+    public String toString() {
+        return "University: " + name + 
+        ", courses:" + this.courses.size() +
+        ", students:" + this.students.size() +
+        ", registrations: " + this.registrations.size();
     }
 }

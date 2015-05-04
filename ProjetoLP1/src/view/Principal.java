@@ -1,4 +1,4 @@
-/*
+package view;/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -14,7 +14,7 @@ import modelos.University;
 public class Principal extends javax.swing.JFrame {
 
     /**
-     * Creates new form Principal
+     * Creates new form view.Principal
      */
     public Principal() {
         initComponents();
