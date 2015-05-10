@@ -62,4 +62,9 @@ public class University {
     public void setRegistrations(ArrayList<Registration> registrations) {
         this.registrations = registrations;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

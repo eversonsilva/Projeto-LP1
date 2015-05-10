@@ -1,3 +1,4 @@
+package visualizacoes;
 
 import javax.swing.JOptionPane;
 
@@ -6,7 +7,6 @@ import javax.swing.JOptionPane;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author ezequieloliveira
@@ -19,6 +19,9 @@ public class CadastraAluno extends javax.swing.JFrame {
     public CadastraAluno() {
         initComponents();
         this.setTitle("Cadastro de aluno");
+        if (chkType.isEnabled()) {
+            System.out.println("Oi");
+        }
     }
 
     /**
@@ -45,7 +48,7 @@ public class CadastraAluno extends javax.swing.JFrame {
         txtEmail = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtEndereco = new javax.swing.JTextArea();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        chkType = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,10 +83,10 @@ public class CadastraAluno extends javax.swing.JFrame {
         txtEndereco.setRows(5);
         jScrollPane2.setViewportView(txtEndereco);
 
-        jCheckBox1.setText("Graduação");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        chkType.setText("Graduação");
+        chkType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                chkTypeActionPerformed(evt);
             }
         });
 
@@ -102,7 +105,7 @@ public class CadastraAluno extends javax.swing.JFrame {
                         .addGap(16, 16, 16)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jCheckBox1)
+                                .addComponent(chkType)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,7 +149,7 @@ public class CadastraAluno extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jCheckBox1)
+                .addComponent(chkType)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
@@ -172,21 +175,21 @@ public class CadastraAluno extends javax.swing.JFrame {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
+        txtCodigo.setText(null);
+        txtEmail.setText(null);
+        txtEndereco.setText(null);
+        txtNome.setText(null);
+        txtTelefone.setText(null);
+        txtCodigo.requestFocus();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         // TODO add your handling code here:
-        Integer code;
-        try {
-            code = Integer.parseInt(txtCodigo.getText());
-        } catch(Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Erro cadastro", "Código de aluno somente números.", JOptionPane.WARNING_MESSAGE);
-        }
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void chkTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkTypeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }//GEN-LAST:event_chkTypeActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -226,7 +229,7 @@ public class CadastraAluno extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastrar;
     private javax.swing.JButton btnCancelar;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox chkType;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

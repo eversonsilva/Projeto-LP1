@@ -1,13 +1,13 @@
 package modelos;
 
 abstract class Student {
-    private Integer id;
+    private Long id;
     private String name;
     private String address;
     private String phone;
     private String email;
 
-    public Student(Integer id, String name, String address, String phone, String email) {
+    public Student(Long id, String name, String address, String phone, String email) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -15,11 +15,11 @@ abstract class Student {
         this.email = email;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -62,6 +62,6 @@ abstract class Student {
 
     @Override
     public String toString() {
-        return id + " " + name + " " + address + " " + phone + " " + email;
+        return id + "#" + name + "#" + address + "#" + phone + "#" + email;
     }
 }

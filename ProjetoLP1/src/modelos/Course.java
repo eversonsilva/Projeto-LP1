@@ -47,7 +47,7 @@ class Course {
 
     @Override
     public String toString() {
-        return this.code + " " + this.title + " " + this.numCredits + " " + this.maxStudents;
+        return this.code + "#" + this.title + "#" + this.numCredits + "#" + this.maxStudents;
     }
 
     @Override

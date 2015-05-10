@@ -4,7 +4,7 @@ public class UnderGraduateStudent extends Student {
     private String major;
     private String minor;
 
-    public UnderGraduateStudent(String major, String minor, Integer id, String name, String address, String phone, String email) {
+    public UnderGraduateStudent(String major, String minor, Long id, String name, String address, String phone, String email) {
         super(id, name, address, phone, email);
         this.major = major;
         this.minor = minor;
@@ -28,7 +28,7 @@ public class UnderGraduateStudent extends Student {
 
     @Override
     public String toString() {
-        return super.toString() + " " + major + " " + minor; //To change body of generated methods, choose Tools | Templates.
+        return super.toString() + "#" + major + "#" + minor;
     }
 
     @Override
