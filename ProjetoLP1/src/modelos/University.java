@@ -16,6 +16,10 @@ public class University {
         this.students = new ArrayList<>();
         this.registrations = new ArrayList<>();
     }
+    
+    public void addStudent(Student student) {
+        this.students.add(student);
+    }
 
     public Course addCourse(String code, String title, Integer numCredits, Integer maxStudents) {
         Course tmpCourse = new Course(code, title, numCredits, maxStudents);

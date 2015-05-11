@@ -1,6 +1,6 @@
 package modelos;
 
-abstract class Student {
+public abstract class Student {
     private Long id;
     private String name;
     private String address;
