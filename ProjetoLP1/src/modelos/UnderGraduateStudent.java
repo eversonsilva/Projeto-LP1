@@ -1,6 +1,7 @@
 package modelos;
 
 public class UnderGraduateStudent extends Student {
+
     private String major;
     private String minor;
 
@@ -14,12 +15,13 @@ public class UnderGraduateStudent extends Student {
         return major;
     }
 
-    public void setMajor(String major) {
-        this.major = major;
-    }
-
     public String getMinor() {
         return minor;
+    }
+
+
+    public void setMajor(String major) {
+        this.major = major;
     }
 
     public void setMinor(String minor) {

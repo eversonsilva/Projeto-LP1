@@ -1,6 +1,7 @@
 package modelos;
 
 public class PostGraduateStudent extends Student {
+
     private String thesisTitle;
     private String supervisor;
 
@@ -14,12 +15,13 @@ public class PostGraduateStudent extends Student {
         return thesisTitle;
     }
 
-    public void setThesisTitle(String thesisTitle) {
-        this.thesisTitle = thesisTitle;
-    }
-
     public String getSupervisor() {
         return supervisor;
+    }
+
+
+    public void setThesisTitle(String thesisTitle) {
+        this.thesisTitle = thesisTitle;
     }
 
     public void setSupervisor(String supervisor) {
