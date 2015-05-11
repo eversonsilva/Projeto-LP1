@@ -7,6 +7,7 @@ package visualizacoes;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import modelos.*;
@@ -24,7 +25,7 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         initComponents();
-        
+
         this.txtNomeUniversidade.setText(universidade.getName());
         this.labelUniversidadeNome.setText(universidade.getName());
         this.reloadTable();
@@ -33,17 +34,21 @@ public class Main extends javax.swing.JFrame {
     public void reloadTable() {
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.setColumnCount(3);
-        modelo.setColumnIdentifiers(new Object[] { "Código", "Nome", "Titulo" });
+        modelo.setColumnIdentifiers(new Object[]{"Código", "Nome", "Titulo"});
 
         Object[] list = new Object[3];
 
         for (Student s : universidade.getStudents()) {
             list[0] = s.getId();
             list[1] = s.getName();
-            list[2] = "GRAD";
+            if (s instanceof UnderGraduateStudent) {
+                list[2] = "GRADUANDO";
+            } else {
+                list[2] = "PÓS-GRADUANDO";
+            }
             modelo.addRow(list);
         }
-        
+
         tabelaAlunos.setModel(modelo);
     }
 
@@ -348,10 +353,23 @@ public class Main extends javax.swing.JFrame {
 
         Student tmpStudent;
 
-        Long id = Long.parseLong(txtTiaAluno.getText());
+        Long id = null;
 
-        tmpStudent = new UnderGraduateStudent("", "", id, txtNomeAluno.getText(), txtEnderecoAluno.getText(), txtTelefoneAluno.getText(), txtEmailAluno.getText());
-        universidade.addStudent(tmpStudent);
+        try {
+            id = Long.parseLong(txtTiaAluno.getText());
+            if (jComboBoxSelecionarTitulo.getSelectedItem() == "Pós-Graduação") {
+                tmpStudent = new PostGraduateStudent("", "", id, txtNomeAluno.getText(), txtEnderecoAluno.getText(), txtTelefoneAluno.getText(), txtEmailAluno.getText());
+                universidade.addStudent(tmpStudent);
+            } else if (jComboBoxSelecionarTitulo.getSelectedItem() == "Graduação") {
+                tmpStudent = new UnderGraduateStudent("", "", id, txtNomeAluno.getText(), txtEnderecoAluno.getText(), txtTelefoneAluno.getText(), txtEmailAluno.getText());
+                universidade.addStudent(tmpStudent);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Selecione o titulo", "Selecione o titulo", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "Somente números no código do aluno!", "Somente números no código do aluno!", JOptionPane.ERROR_MESSAGE);
+        }
+
         reloadTable();
 //        DefaultTableModel modelo = (DefaultTableModel) tabelaAlunos.getModel();
 //        modelo.fireTableDataChanged();
@@ -359,9 +377,8 @@ public class Main extends javax.swing.JFrame {
 
     private void jComboBoxSelecionarTituloItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxSelecionarTituloItemStateChanged
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_jComboBoxSelecionarTituloItemStateChanged
-    
+
     /**
      * @param args the command line arguments
      */
