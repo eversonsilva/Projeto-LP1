@@ -380,7 +380,10 @@ public class Main extends javax.swing.JFrame  {
         try {
             id = Long.parseLong(txtTiaAluno.getText());
             if (jComboBoxSelecionarTitulo.getSelectedItem() == "Pós-Graduação") {
-                String thesisTitle = JOptionPane.showInputDialog(rootPane, "Tese do aluno");
+                String thesisTitle = null;
+                while(thesisTitle == null) {
+                    JOptionPane.showInputDialog(rootPane, "Tese do aluno");
+                }
                 String supervisor = JOptionPane.showInputDialog(rootPane, "Supervisor do aluno");
                 tmpStudent = new PostGraduateStudent(thesisTitle, supervisor, id, txtNomeAluno.getText(), txtEnderecoAluno.getText(), txtTelefoneAluno.getText(), txtEmailAluno.getText());
                 universidade.addStudent(tmpStudent);

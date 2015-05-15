@@ -46,4 +46,9 @@ public class Registration {
     public void setSemester(int semester) {
         this.semester = semester;
     }
+
+    @Override
+    public String toString() {
+        return this.acadYear + "#" + this.semester + "#" + course.getCode() + "#" + student.getId();
+    }
 }
