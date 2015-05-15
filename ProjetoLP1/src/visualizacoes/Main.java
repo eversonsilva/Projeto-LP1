@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import modelos.*;
+import sun.awt.UngrabEvent;
 
 /**
  *
@@ -148,6 +149,17 @@ public class Main extends javax.swing.JFrame  {
                 return canEdit [columnIndex];
             }
         });
+        tabelaAlunos.setCellSelectionEnabled(true);
+        tabelaAlunos.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tabelaAlunosFocusLost(evt);
+            }
+        });
+        tabelaAlunos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaAlunosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelaAlunos);
 
         jLabel1.setText("TIA");
@@ -159,6 +171,12 @@ public class Main extends javax.swing.JFrame  {
         jLabel4.setText("E-mail");
 
         jLabel5.setText("Endereço");
+
+        txtTiaAluno.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTiaAlunoFocusLost(evt);
+            }
+        });
 
         txtEnderecoAluno.setColumns(20);
         txtEnderecoAluno.setRows(5);
@@ -306,7 +324,7 @@ public class Main extends javax.swing.JFrame  {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane5)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -314,7 +332,7 @@ public class Main extends javax.swing.JFrame  {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
+                .addComponent(jScrollPane5))
         );
 
         mainTab.addTab("Cursos", jPanel3);
@@ -362,10 +380,14 @@ public class Main extends javax.swing.JFrame  {
         try {
             id = Long.parseLong(txtTiaAluno.getText());
             if (jComboBoxSelecionarTitulo.getSelectedItem() == "Pós-Graduação") {
-                tmpStudent = new PostGraduateStudent("", "", id, txtNomeAluno.getText(), txtEnderecoAluno.getText(), txtTelefoneAluno.getText(), txtEmailAluno.getText());
+                String thesisTitle = JOptionPane.showInputDialog(rootPane, "Tese do aluno");
+                String supervisor = JOptionPane.showInputDialog(rootPane, "Supervisor do aluno");
+                tmpStudent = new PostGraduateStudent(thesisTitle, supervisor, id, txtNomeAluno.getText(), txtEnderecoAluno.getText(), txtTelefoneAluno.getText(), txtEmailAluno.getText());
                 universidade.addStudent(tmpStudent);
             } else if (jComboBoxSelecionarTitulo.getSelectedItem() == "Graduação") {
-                tmpStudent = new UnderGraduateStudent("", "", id, txtNomeAluno.getText(), txtEnderecoAluno.getText(), txtTelefoneAluno.getText(), txtEmailAluno.getText());
+                String major = JOptionPane.showInputDialog(rootPane, "Grande área do aluno");
+                String minor = JOptionPane.showInputDialog(rootPane, "Especialização do aluno");
+                tmpStudent = new UnderGraduateStudent(major, minor, id, txtNomeAluno.getText(), txtEnderecoAluno.getText(), txtTelefoneAluno.getText(), txtEmailAluno.getText());
                 universidade.addStudent(tmpStudent);
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Selecione o titulo", "Selecione o titulo", JOptionPane.ERROR_MESSAGE);
@@ -373,6 +395,12 @@ public class Main extends javax.swing.JFrame  {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "Somente números no código do aluno!", "Somente números no código do aluno!", JOptionPane.ERROR_MESSAGE);
         }
+        
+        txtEmailAluno.setText(null);
+        txtEnderecoAluno.setText(null);
+        txtNomeAluno.setText(null);
+        txtTelefoneAluno.setText(null);
+        txtTiaAluno.setText(null);
 
         reloadTable();
 //        DefaultTableModel modelo = (DefaultTableModel) tabelaAlunos.getModel();
@@ -382,6 +410,43 @@ public class Main extends javax.swing.JFrame  {
     private void jComboBoxSelecionarTituloItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxSelecionarTituloItemStateChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxSelecionarTituloItemStateChanged
+
+    String selectedIdStudent = null;
+    
+    private void tabelaAlunosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaAlunosMouseClicked
+        // TODO add your handling code here:
+        System.out.println(tabelaAlunos.getModel().getValueAt(tabelaAlunos.getSelectedRow(), tabelaAlunos.getSelectedColumn()));
+        if(tabelaAlunos.getModel().getValueAt(tabelaAlunos.getSelectedRow(), 2) == "GRADUANDO") {
+            Student tmpStudent =  universidade.findStudent(Long.parseLong(tabelaAlunos.getModel().getValueAt(tabelaAlunos.getSelectedRow(), 0).toString()));
+            txtNomeAluno.setText(tmpStudent.getName());
+            txtTiaAluno.setText(tmpStudent.getId().toString());
+            txtEnderecoAluno.setText(tmpStudent.getAddress());
+            txtTelefoneAluno.setText(tmpStudent.getPhone());
+            txtEmailAluno.setText(tmpStudent.getEmail());
+            buttonGerenciarAluno.setText("Alterar Aluno");
+        } else if(tabelaAlunos.getModel().getValueAt(tabelaAlunos.getSelectedRow(), 2) == "PÓS-GRADUANDO") {
+            selectedIdStudent = tabelaAlunos.getModel().getValueAt(tabelaAlunos.getSelectedRow(), 0).toString();
+            Student tmpStudent =  universidade.findStudent(Long.parseLong(selectedIdStudent));
+            txtNomeAluno.setText(tmpStudent.getName());
+            txtTiaAluno.setText(tmpStudent.getId().toString());
+            txtEnderecoAluno.setText(tmpStudent.getAddress());
+            txtTelefoneAluno.setText(tmpStudent.getPhone());
+            txtEmailAluno.setText(tmpStudent.getEmail());
+            buttonGerenciarAluno.setText("Alterar Aluno");
+        }
+    }//GEN-LAST:event_tabelaAlunosMouseClicked
+
+    private void tabelaAlunosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tabelaAlunosFocusLost
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_tabelaAlunosFocusLost
+
+    private void txtTiaAlunoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTiaAlunoFocusLost
+        // TODO add your handling code here:
+        if(txtTiaAluno.getText() == null ? selectedIdStudent != null : !txtTiaAluno.getText().equals(selectedIdStudent)) {
+            buttonGerenciarAluno.setText("Cadastrar Aluno");
+        }
+    }//GEN-LAST:event_txtTiaAlunoFocusLost
 
     /**
      * @param args the command line arguments
