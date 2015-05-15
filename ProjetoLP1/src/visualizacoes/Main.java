@@ -381,15 +381,25 @@ public class Main extends javax.swing.JFrame  {
             id = Long.parseLong(txtTiaAluno.getText());
             if (jComboBoxSelecionarTitulo.getSelectedItem() == "Pós-Graduação") {
                 String thesisTitle = null;
+                String supervisor = null;
                 while(thesisTitle == null) {
-                    JOptionPane.showInputDialog(rootPane, "Tese do aluno");
+                    thesisTitle = JOptionPane.showInputDialog(rootPane, "Tese do aluno");
                 }
-                String supervisor = JOptionPane.showInputDialog(rootPane, "Supervisor do aluno");
+                
+                while(supervisor == null) {
+                    supervisor = JOptionPane.showInputDialog(rootPane, "Supervisor do aluno");
+                }
                 tmpStudent = new PostGraduateStudent(thesisTitle, supervisor, id, txtNomeAluno.getText(), txtEnderecoAluno.getText(), txtTelefoneAluno.getText(), txtEmailAluno.getText());
                 universidade.addStudent(tmpStudent);
             } else if (jComboBoxSelecionarTitulo.getSelectedItem() == "Graduação") {
-                String major = JOptionPane.showInputDialog(rootPane, "Grande área do aluno");
-                String minor = JOptionPane.showInputDialog(rootPane, "Especialização do aluno");
+                String major = null;
+                String minor = null;
+                while(major == null) {
+                    major = JOptionPane.showInputDialog(rootPane, "Grande área do aluno");
+                }
+                while(minor == null) {
+                    minor = JOptionPane.showInputDialog(rootPane, "Especialização do aluno");
+                }
                 tmpStudent = new UnderGraduateStudent(major, minor, id, txtNomeAluno.getText(), txtEnderecoAluno.getText(), txtTelefoneAluno.getText(), txtEmailAluno.getText());
                 universidade.addStudent(tmpStudent);
             } else {
