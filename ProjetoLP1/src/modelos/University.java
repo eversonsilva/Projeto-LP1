@@ -1,13 +1,14 @@
 package modelos;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class University {
 
     private String name;
-    private ArrayList<Course> courses;
-    private ArrayList<Student> students;
-    private ArrayList<Registration> registrations;
+    private List<Course> courses;
+    private List<Student> students;
+    private List<Registration> registrations;
 
     public University(String name) {
         this.name = name;
@@ -16,9 +17,27 @@ public class University {
         this.registrations = new ArrayList<Registration>();
     }
     
+    public Course getCourse(String code) {
+        for(Course course : courses) {
+            if(course.getCode() == code) return course;
+        }
+        
+        return null;
+    }
+    
+    public Registration getRegistration(Long studentID, String courseCode) {
+        for(Registration registration : registrations) {
+            if(registration.getStudent().getId() == studentID && registration.getCourse().getCode() == courseCode) return registration;
+        }
+        
+        return null;
+    }
+    
     public void addStudent(Student student) {
         this.students.add(student);
     }
+    
+    
 
     /*
     Name
@@ -43,7 +62,17 @@ public class University {
         return course;
     }
 
-    public Course updateCourse(String code, String title, Integer numCredits, Integer maxStudents) {
+    public void updateCourse(String code, String title, Integer numCredits, Integer maxStudents) {
+        for(Course course : courses) {
+            if(course.getCode() == null ? code == null : course.getCode().equals(code)) {
+                course.setTitle(title);
+                course.setMaxStudents(maxStudents);
+                course.setNumCredits(numCredits);
+            }
+        }
+    }
+    
+    /*public Course updateCourse(String code, String title, Integer numCredits, Integer maxStudents) {
         Course course = getCourse(code);
         if(course != null) {
             course.setTitle(title);
@@ -51,20 +80,9 @@ public class University {
             course.setMaxStudents(maxStudents);
         }
         return course;
-    }
+    }*/
 
-    public Course getCourse(String code) {
-        for (Course course : courses)
-            if(course.getCode().equals(code))
-                return course;
-        return null;
-    }
-
-    public ArrayList<Course> getCourses() {
-        return courses;
-    }
-
-    public ArrayList<Course> getCourses(long studentID) {
+    public ArrayList<Course> getCourses(Long studentID) {
         ArrayList<Course> list = new ArrayList<Course>();
         for (Registration reg : this.registrations) {
             if(reg.getStudent().getId() == studentID)
@@ -73,14 +91,10 @@ public class University {
         return list;
     }
 
-    public void setCourses(ArrayList<Course> courses) {
-        this.courses = courses;
-    }
-
     /*
     Students
     */
-    public UnderGraduateStudent addUnderGraduateStudent(long id, String name, String address, String phone, String email, String major, String minor) {
+    public UnderGraduateStudent addUnderGraduateStudent(Long id, String name, String address, String phone, String email, String major, String minor) {
         Student s = getStudent(id);
         UnderGraduateStudent student = (s instanceof UnderGraduateStudent)? (UnderGraduateStudent) s : null;
         if(s == null) {
@@ -90,7 +104,7 @@ public class University {
         return student;
     }
 
-    public UnderGraduateStudent updateUnderGraduateStudent(long id, String name, String address, String phone, String email, String major, String minor) {
+    public UnderGraduateStudent updateUnderGraduateStudent(Long id, String name, String address, String phone, String email, String major, String minor) {
         Student s = getStudent(id);
         UnderGraduateStudent student = (s instanceof UnderGraduateStudent)? (UnderGraduateStudent) s : null;
         if(student != null) {
@@ -104,7 +118,7 @@ public class University {
         return student;
     }
 
-    public PostGraduateStudent addPostGraduateStudent(long id, String name, String address, String phone, String email, String thesisTitle, String supervisor) {
+    public PostGraduateStudent addPostGraduateStudent(Long id, String name, String address, String phone, String email, String thesisTitle, String supervisor) {
         Student s = getStudent(id);
         PostGraduateStudent student = (s instanceof PostGraduateStudent)? (PostGraduateStudent) s : null;
         if(s == null) {
@@ -114,7 +128,7 @@ public class University {
         return student;
     }
 
-    public PostGraduateStudent updatePostGraduateStudent(long id, String name, String address, String phone, String email, String thesisTitle, String supervisor) {
+    public PostGraduateStudent updatePostGraduateStudent(Long id, String name, String address, String phone, String email, String thesisTitle, String supervisor) {
         Student s = getStudent(id);
         PostGraduateStudent student = (s instanceof PostGraduateStudent)? (PostGraduateStudent) s : null;
         if(student != null) {
@@ -128,16 +142,12 @@ public class University {
         return student;
     }
 
-    public Student getStudent(long id) {
+    public Student getStudent(Long id) {
         for (Student student : students) {
             if (student.getId() == id) 
                 return student;
         }
         return null;
-    }
-
-    public ArrayList<Student> getStudents() {
-        return students;
     }
 
     public ArrayList<Student> getStudents(String courseCode) {
@@ -148,21 +158,50 @@ public class University {
         }
         return list;
     }
+    
+    public String getStudents() {
+        String students = "";
+        for(Student student : this.students) {
+            students += student.toString() + " ";
+        }
+        return students;
+    }
 
-    public ArrayList<UnderGraduateStudent> getUnderGraduateStudents() {
-        ArrayList<UnderGraduateStudent> list = new ArrayList<UnderGraduateStudent>();
+    public String getUnderGraduateStudents() {
+        String list = "";
         for(Student student : this.students) {
             if(student instanceof UnderGraduateStudent)
-                list.add((UnderGraduateStudent) student);
+                list += student.toString() + " ";
         }
         return list;
     }
+    
+    public Boolean deRegisterStudent(Long idStudent, String codeCourse) {
+        for(Registration reg : this.registrations) {
+            if ( reg.getStudent().getId() == idStudent && reg.getCourse().getCode() == codeCourse ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    public ArrayList<PostGraduateStudent> getPostGraduateStudent() {
-        ArrayList<PostGraduateStudent> list = new ArrayList<PostGraduateStudent>();
+    public List<Student> getStudentsArray() {
+        return this.students;
+    }
+    
+    public List<Course> getCoursesArray() {
+        return this.courses;
+    }
+    
+    public List<Registration> getRegistrationsArray() {
+        return this.registrations;
+    }
+    
+    public String getPostGraduateStudent() {
+         String list = "";
         for(Student student : this.students) {
             if(student instanceof PostGraduateStudent)
-                list.add((PostGraduateStudent) student);
+                list += student.toString() + " ";
         }
         return list;
     }
@@ -175,13 +214,19 @@ public class University {
     Registrations
     */
     public ArrayList<Registration> getRegistrations() {
-        return registrations;
+        return (ArrayList<Registration>) registrations;
     }
 
-    public void setRegistrations(ArrayList<Registration> registrations) {
-        this.registrations = registrations;
+    public String getCourses() {
+        String courses = "";
+        
+        for(Course course : this.courses) {
+            courses += course.toString() + " ";
+        }
+        
+        return courses;
     }
-
+    
     @Override
     public String toString() {
         return this.name;
