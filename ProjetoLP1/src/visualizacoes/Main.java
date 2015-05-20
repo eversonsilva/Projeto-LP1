@@ -5,10 +5,13 @@
  */
 package visualizacoes;
 
+import modelos.Reader;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -26,10 +29,18 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
-    University universidade = new University("Mackenzie");
+    Reader r = new Reader();
+    University universidade = r.readUniversityFile("universidade.txt");
     
     public Main() {
         initComponents();
+        
+        universidade.setCourses(r.readCoursesFile("courses.txt"));
+        try {
+        universidade.setRegistrations(r.readRegistrationFile("registrations.txt", universidade));
+        } catch(Exception e) {
+            System.out.println(e);
+        }
         
         this.txtNomeUniversidade.setText(universidade.getName());
         this.labelUniversidadeNome.setText(universidade.getName());
@@ -47,6 +58,10 @@ public class Main extends javax.swing.JFrame {
         DefaultComboBoxModel filtroCursos = new DefaultComboBoxModel();
         DefaultComboBoxModel filtroAlunosMat = new DefaultComboBoxModel();
         DefaultComboBoxModel filtroCursosMat = new DefaultComboBoxModel();
+        
+        filtroCursos.addElement("Filtrar curso");
+        filtroAlunos.addElement("Filtrar aluno");
+        
         for (Student s : universidade.getStudentsArray()) {
             list[0] = s.getId();
             list[1] = s.getName();
@@ -137,7 +152,7 @@ public class Main extends javax.swing.JFrame {
         buttonManagerCourse = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane7 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabelaRegistros = new javax.swing.JTable();
         jPanel9 = new javax.swing.JPanel();
         jComboBoxAlunosFiltrar = new javax.swing.JComboBox();
         jComboBoxCursosFiltrar = new javax.swing.JComboBox();
@@ -471,20 +486,30 @@ public class Main extends javax.swing.JFrame {
 
         mainTab.addTab("Cursos", jPanel3);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaRegistros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Aluno", "Curso"
             }
         ));
-        jScrollPane7.setViewportView(jTable1);
+        tabelaRegistros.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaRegistrosMouseClicked(evt);
+            }
+        });
+        jScrollPane7.setViewportView(tabelaRegistros);
 
         jComboBoxAlunosFiltrar.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxAlunosFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxAlunosFiltrarActionPerformed(evt);
+            }
+        });
 
         jComboBoxCursosFiltrar.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -526,6 +551,11 @@ public class Main extends javax.swing.JFrame {
         jComboBoxCursoMat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton3.setText("Cadastrar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel10.setText("ANO");
 
@@ -616,7 +646,7 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainTab, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
+            .addComponent(mainTab)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -758,7 +788,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTiaAlunoFocusLost
     
     String selectedCourse = null;
-    
+
     private void buttonManagerCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonManagerCourseActionPerformed
         
         switch (buttonManagerCourse.getText()) {
@@ -770,7 +800,8 @@ public class Main extends javax.swing.JFrame {
                     universidade.getCoursesArray().add(cursoTMP);
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(rootPane, e);
-                }   txtCodigoCurso.setText(null);
+                }
+                txtCodigoCurso.setText(null);
                 txtTituloCurso.setText(null);
                 txtNumCreditosCurso.setText(null);
                 txtNumVagasCurso.setText(null);
@@ -780,7 +811,8 @@ public class Main extends javax.swing.JFrame {
                     universidade.updateCourse(selectedCourse, txtTituloCurso.getText(), Integer.parseInt(txtNumCreditosCurso.getText()), Integer.parseInt(txtNumVagasCurso.getText()));
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(rootPane, e);
-            }   break;
+                }
+                break;
         }
         
         this.reloadTable();
@@ -799,7 +831,58 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        DefaultTableModel modeloRegistros = new DefaultTableModel();
+        modeloRegistros.setColumnCount(3);
+        modeloRegistros.setColumnIdentifiers(new Object[]{"Aluno", "Curso"});
+        
+        Object[] listaRegistros = new Object[4];
+        
+        List<Registration> regs = new ArrayList<>();
+        
+        if (jComboBoxAlunosFiltrar.getSelectedItem() != "Filtrar aluno") {
+            for (Course c : universidade.getCoursesArray()) {
+                Registration r = universidade.getRegistration(Long.parseLong(jComboBoxAlunosFiltrar.getSelectedItem().toString()), c.getCode());
+                if (r != null) {
+                    regs.add(r);
+                }
+            }
+        } else if (jComboBoxAlunosFiltrar.getSelectedItem() != "Filtrar curso") {
+            for (Student s : universidade.getStudentsArray()) {
+                Registration r = universidade.getRegistration(s.getId(), jComboBoxCursosFiltrar.getSelectedItem().toString());
+                if (r != null) {
+                    regs.add(r);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Erro");
+        }
+        
+        for (Registration r : regs) {
+            listaRegistros[0] = r.getStudent().getId();
+            listaRegistros[1] = r.getCourse().getCode();
+            modeloRegistros.addRow(listaRegistros);
+        }
+        
+        tabelaRegistros.setModel(modeloRegistros);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        if (universidade.registerStudent(Long.parseLong(jComboBoxAlunoMat.getSelectedItem().toString()), jComboBoxCursoMat.getSelectedItem().toString(), Integer.parseInt(txtAnoMat.getText()), Integer.parseInt(jComboBoxSemMat.getSelectedItem().toString()))) {
+            JOptionPane.showMessageDialog(rootPane, "Matricula realizada com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Matricula não realizada.");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jComboBoxAlunosFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAlunosFiltrarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxAlunosFiltrarActionPerformed
+
+    private void tabelaRegistrosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaRegistrosMouseClicked
+        // TODO add your handling code here:
+        Registration reg = universidade.getRegistration(Long.parseLong(tabelaRegistros.getModel().getValueAt(tabelaRegistros.getSelectedColumn(), 0).toString()), tabelaRegistros.getModel().getValueAt(tabelaRegistros.getSelectedColumn(), 1).toString());
+    }//GEN-LAST:event_tabelaRegistrosMouseClicked
 
     /**
      * @param args the command line arguments
@@ -879,11 +962,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel labelUniversidadeNome;
     private javax.swing.JTabbedPane mainTab;
     private javax.swing.JTable tabelaAlunos;
     private javax.swing.JTable tabelaCursos;
+    private javax.swing.JTable tabelaRegistros;
     private javax.swing.JTextField txtAnoMat;
     private javax.swing.JTextField txtCodigoCurso;
     private javax.swing.JTextField txtEmailAluno;

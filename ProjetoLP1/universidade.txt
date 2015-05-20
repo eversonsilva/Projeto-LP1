@@ -1,0 +1,5 @@
+Mackenzie
+1
+2#name#address#phone#email#major#minor
+1
+3#name#address#phone#email#thesis#supervisor

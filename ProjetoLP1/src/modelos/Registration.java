@@ -14,6 +14,10 @@ public class Registration {
         this.semester = semester;
     }
 
+    public Registration() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public Student getStudent() {
         return student;
     }
