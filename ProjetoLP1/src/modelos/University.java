@@ -34,7 +34,7 @@ public class University {
 
     public Registration getRegistration(Long studentID, String courseCode) {
         for (Registration registration : registrations) {
-            if (registration.getStudent().getId() == studentID && registration.getCourse().getCode() == courseCode) {
+            if (Objects.equals(registration.getStudent().getId(), studentID) && (registration.getCourse().getCode() == null ? courseCode == null : registration.getCourse().getCode().equals(courseCode))) {
                 return registration;
             }
         }
@@ -281,7 +281,11 @@ public class University {
         this.courses = courses;
     }
 
-    public void setRegistrations(List<Registration> registrations) {
+    public void setRegistrations(ArrayList<Registration> registrations) {
         this.registrations = registrations;
+    }
+    
+    public void removeregistro(Registration reg) {
+        registrations.remove(reg);
     }
 }

@@ -77,7 +77,7 @@ public class Reader {
 
                 //UnderGraduate Students
                 ArrayList<UnderGraduateStudent> lug = university.getUnderGraduateStudentsarray();
-                w.write(lug.size());
+                w.write(String.valueOf(lug.size()));
                 w.newLine();
                 for (UnderGraduateStudent student : lug) {
                     w.write(student.toString());
@@ -86,15 +86,17 @@ public class Reader {
 
                 //PostGraduate Students
                 ArrayList<PostGraduateStudent> lpg = university.getPostGraduateStudentarray();
-                w.write(lpg.size());
+                w.write(String.valueOf(lpg.size()));
                 w.newLine();
                 for (PostGraduateStudent student : lpg) {
                     w.write(student.toString());
                     w.newLine();
                 }
+                w.flush();
+                w.close();
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -130,13 +132,16 @@ public class Reader {
         try {
             BufferedWriter w = new BufferedWriter(new FileWriter(fileName));
             if (w != null) {
-                w.write(courses.size());
+                w.write(String.valueOf(courses.size()));
                 w.newLine();
                 for (Course course : courses) {
                     w.write(course.toString());
                     w.newLine();
                 }
             }
+
+            w.flush();
+            w.close();
         } catch (Exception e) {
 
         }
@@ -176,13 +181,16 @@ public class Reader {
         try {
             BufferedWriter w = new BufferedWriter(new FileWriter(fileName));
             if (w != null) {
-                w.write(registrations.size());
+                w.write(String.valueOf(registrations.size()));
                 w.newLine();
                 for (Registration registration : registrations) {
                     w.write(registration.toString());
                     w.newLine();
                 }
             }
+
+            w.flush();
+            w.close();
         } catch (Exception e) {
 
         }

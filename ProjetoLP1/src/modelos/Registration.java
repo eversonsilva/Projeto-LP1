@@ -53,6 +53,6 @@ public class Registration {
 
     @Override
     public String toString() {
-        return this.acadYear + "#" + this.semester + "#" + course.getCode() + "#" + student.getId();
+        return student.getId() + "#" + course.getCode() + "#" + this.acadYear + "#" + this.semester;
     }
 }
