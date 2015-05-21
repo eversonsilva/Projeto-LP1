@@ -235,6 +235,12 @@ public class Main extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tabelaAlunos);
 
+        jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel7MouseClicked(evt);
+            }
+        });
+
         jLabel1.setText("TIA");
 
         jLabel2.setText("Nome");
@@ -374,12 +380,23 @@ public class Main extends javax.swing.JFrame {
             }
         ));
         tabelaCursos.setBounds(new java.awt.Rectangle(0, 0, 371, 64));
+        tabelaCursos.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tabelaCursosFocusLost(evt);
+            }
+        });
         tabelaCursos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabelaCursosMouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(tabelaCursos);
+
+        jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel6MouseClicked(evt);
+            }
+        });
 
         jLabel6.setText("Código");
 
@@ -498,6 +515,11 @@ public class Main extends javax.swing.JFrame {
                 "Aluno", "Curso"
             }
         ));
+        tabelaRegistros.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tabelaRegistrosFocusLost(evt);
+            }
+        });
         tabelaRegistros.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tabelaRegistrosMouseClicked(evt);
@@ -910,6 +932,33 @@ public class Main extends javax.swing.JFrame {
         universidade.removeregistro(regSelected);
         reloadTable();
     }//GEN-LAST:event_btnRemoverRegistroActionPerformed
+
+    private void tabelaRegistrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tabelaRegistrosFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tabelaRegistrosFocusLost
+
+    private void tabelaCursosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tabelaCursosFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tabelaCursosFocusLost
+
+    private void jPanel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseClicked
+        // TODO add your handling code here:
+        buttonManagerCourse.setText("Adicionar");
+        txtNumCreditosCurso.setText(null);
+        txtNumVagasCurso.setText(null);
+        txtCodigoCurso.setText(null);
+        txtTituloCurso.setText(null);
+    }//GEN-LAST:event_jPanel6MouseClicked
+
+    private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
+        // TODO add your handling code here:
+        buttonGerenciarAluno.setText("Cadastrar Aluno");
+        txtEmailAluno.setText(null);
+        txtEnderecoAluno.setText(null);
+        txtNomeAluno.setText(null);
+        txtTelefoneAluno.setText(null);
+        txtTiaAluno.setText(null);
+    }//GEN-LAST:event_jPanel7MouseClicked
 
     /**
      * @param args the command line arguments
